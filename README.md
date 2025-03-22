@@ -1,1 +1,1 @@
-# Hack-Judge
+# HackJudge
