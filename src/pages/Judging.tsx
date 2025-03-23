@@ -37,7 +37,7 @@ export function Judging() {
     { id: "4", name: "Presentation", maxScore: 10, description: "How well was the project presented?" },
   ];
 
-  const totalJudges = 3; // Specify the total number of judges required for a project
+  const totalJudges = 5; // Specify the total number of judges required for a project
 
   // Fetch authenticated user's email
   useEffect(() => {
@@ -103,27 +103,6 @@ export function Judging() {
     fetchProjects();
     console.log(projects)
   }, []);
-
-  const startTimer = () => {
-    setTimer(480); // 8 minutes in seconds
-    setIsTimerRunning(true);
-    const interval = setInterval(() => {
-      setTimer((prev) => {
-        if (prev === null || prev <= 1) {
-          clearInterval(interval);
-          setIsTimerRunning(false);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  };
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
 
   const handleSubmitScores = async () => {
     if (!selectedProject || !judgeEmail) return;
@@ -210,31 +189,9 @@ export function Judging() {
         <div className="mt-6">
           <div className="mb-6 flex items-center justify-between space-x-4">
             <h2 className="text-lg font-medium text-gray-900">
-              {/* Judging: {projects.find((p) => p.id === selectedProject)?.title} */}
               Judging: {projects.find((p) => p.id === selectedProject)?.teamName} 
-
             </h2>
-            <div className="flex items-center space-x-2">
-              {timer !== null && (
-                <div className="flex items-center space-x-2">
-                  <Timer className="h-5 w-5 text-gray-500" />
-                  <span className="text-lg font-medium text-gray-900">
-                    {formatTime(timer)}
-                  </span>
-                </div>
-              )}
-              
-            </div>
-           
           </div>
-          <div className="bg-green-600 rounded-lg p-3 mt-1 text-sm text-white max-w-[110px] mb-4">
-                <a href={`${projects.find(p => p.id === selectedProject)?.projectUrl}`} target="_blank">View Abstract</a>
-              </div>
-          {!isTimerRunning && timer === null && (
-            <Button onClick={startTimer} className="mb-6">
-              Start Timer
-            </Button>
-          )}
 
           <div className="space-y-6">
             {criteria.map((criterion) => (

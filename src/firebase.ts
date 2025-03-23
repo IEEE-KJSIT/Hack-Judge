@@ -3,7 +3,6 @@ import { initializeApp } from "firebase/app";
 import { getAuth, setPersistence, browserLocalPersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-
 const firebaseConfig = {
   apiKey: "AIzaSyBETLH6CXLiOLGptIm-REk3EAh73p_VNJM",
   authDomain: "algoforge-1817d.firebaseapp.com",
