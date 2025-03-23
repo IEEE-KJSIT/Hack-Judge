@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Award, BarChart3, Home, Upload, Menu, X, LogOut, Trophy } from "lucide-react";
+import { Award, BarChart3, Home, Upload, Menu, X, LogOut } from "lucide-react";
 import { cn } from "../lib/utils";
 import { auth } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -20,7 +20,6 @@ export function Layout({ children }: LayoutProps) {
     { name: "Submit Project", href: "/submit", icon: Upload },
     { name: "Judge Projects", href: "/judge", icon: Award },
     { name: "Reports", href: "/reports", icon: BarChart3 },
-    { name: "Leaderboard", href: "/leaderboard", icon: Trophy },
   ];
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -35,7 +34,7 @@ export function Layout({ children }: LayoutProps) {
   };
 
   if (loading) return <div>Loading...</div>;
-  
+
   if (!user) {
     navigate("/"); // Redirect to login page if not authenticated
     return null;

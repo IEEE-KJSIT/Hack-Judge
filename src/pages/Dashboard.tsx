@@ -3,38 +3,68 @@ import { Award, Users, Trophy } from 'lucide-react';
 import { db, auth } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { JudgeService } from '../services/judgeService'; // Import JudgeService
-import { useAuthState } from 'react-firebase-hooks/auth';
 
 export function Dashboard() {
-  // Use dummy data instead of real Firebase data
-  const [projects, setProjects] = useState([
-    { id: 'proj1', title: 'Smart Home IoT System' },
-    { id: 'proj2', title: 'Blockchain Voting App' },
-    { id: 'proj3', title: 'AI Fitness Trainer' },
-    { id: 'proj4', title: 'Augmented Reality Navigation' }
-  ]);
-  
+  const [projects, setProjects] = useState([]);
   const [judges, setJudges] = useState([]);
-  const [scores, setScores] = useState([
-    { id: 'score1', projectId: 'proj1', judgeEmail: 'het@s4ds.com', score: 85 },
-    { id: 'score2', projectId: 'proj1', judgeEmail: 'lekhraj@s4ds.com', score: 92 },
-    { id: 'score3', projectId: 'proj2', judgeEmail: 'rakesh@s4ds.com', score: 78 },
-    { id: 'score4', projectId: 'proj3', judgeEmail: 'nitesh@s4ds.com', score: 88 },
-  ]);
-  
-  // Get current user
-  const [user] = useAuthState(auth);
+  const [scores, setScores] = useState([]);
+  const [user, setUser] = useState(null);
 
   const judgeService = new JudgeService(); // Create an instance of JudgeService
 
   useEffect(() => {
-    // Use JudgeService to get judges - this should work as before
+    const fetchUser = () => {
+      const currentUser = auth.currentUser;
+      setUser(currentUser);
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const projectCollection = collection(db, 'projects');
+        const projectSnapshot = await getDocs(projectCollection);
+        const projectList = projectSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setProjects(projectList);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  useEffect(() => {
+    // Use JudgeService to get judges
     const fetchJudges = () => {
       const allJudges = judgeService.getAllJudges();
       setJudges(allJudges);
     };
 
     fetchJudges();
+  }, []);
+
+  useEffect(() => {
+    const fetchScores = async () => {
+      try {
+        const scoreCollection = collection(db, 'ratings');
+        const scoreSnapshot = await getDocs(scoreCollection);
+        const scoreList = scoreSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setScores(scoreList);
+      } catch (error) {
+        console.error('Error fetching scores:', error);
+      }
+    };
+
+    fetchScores();
   }, []);
 
   const groupScoresByProject = (scores) => {
@@ -70,19 +100,19 @@ export function Dashboard() {
       name: 'Total Projects',
       value: projects.length,
       icon: Trophy,
-      color: 'bg-[#007bff]',
+      color: 'bg-blue-500',
     },
     {
       name: 'Active Judges',
       value: judges.length,
       icon: Users,
-      color: 'bg-[#00bfff]',
+      color: 'bg-green-500',
     },
     {
       name: 'Evaluations Complete',
       value: evaluationsComplete,
       icon: Award,
-      color: 'bg-[#0066ff]',
+      color: 'bg-purple-500',
     },
   ];
 
