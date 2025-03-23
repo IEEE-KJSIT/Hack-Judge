@@ -6,12 +6,15 @@ import { Dashboard } from "./pages/Dashboard";
 import { ProjectSubmission } from "./pages/ProjectSubmission";
 import { Judging } from "./pages/Judging";
 import { Reports } from "./pages/Reports";
+import { Leaderboard } from "./pages/Leaderboard";
+import { LeaderboardStandalone } from "./pages/LeaderboardStandalone";
 import { ProtectedRoute } from "./components/PrivateRoute";
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
+        {/* Normal authentication - root route shows login page */}
         <Route path="/" element={<Login />} />
         <Route
           path="/dashboard"
@@ -53,6 +56,17 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/leaderboard"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Leaderboard />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/leaderboard-standalone" element={<LeaderboardStandalone />} />
       </Routes>
     </Router>
   );
